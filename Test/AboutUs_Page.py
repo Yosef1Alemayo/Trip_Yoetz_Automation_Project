@@ -3,7 +3,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
-from time import sleep
 
 
 def init():
@@ -23,10 +22,9 @@ def test_links():
     for i in range(len(top_links)):
         if i != 2:
             top_links[i].click()
-            sleep(3)
             WebDriverWait(driver, 20)
             driver.back()
-            sleep(3)
+            WebDriverWait(driver, 20)
 
 
 # --------------------------
@@ -38,31 +36,28 @@ def test_who_are_we():
     who_are_we_button = driver.find_element(By.XPATH, WHO_ARE_WE)
     driver.implicitly_wait(15)
     who_are_we_button.click()
-    sleep(3)
+    WebDriverWait(driver, 20)
     page_links = driver.find_elements(By.XPATH, PAGE_LINKS)
     for i in range(len(page_links)):
         page_links[i].click()
         driver.implicitly_wait(15)
-        sleep(2)
     contact_links = driver.find_elements(By.XPATH, CONTACT_LINKS)
     for i in range(len(contact_links)):
         contact_links[i].click()
         driver.implicitly_wait(15)
-        sleep(2)
 
 
 # --------------------------
 SEARCH_FIELD = '//form[1]/input[1]'
-ERROR_MESSAGE = '//h2'
+ERROR_MESSAGE = "//h2[contains(text(),'no city found')]"
 def test_search_correctly():
     driver = init()
     search_field = driver.find_element(By.XPATH, SEARCH_FIELD)
-    sleep(2)
+    WebDriverWait(driver, 20)
     search_field.send_keys('Paris')
     search_field.send_keys(Keys.ENTER)
     WebDriverWait(driver, 10).until(EC.url_to_be('https://trip-yoetz.herokuapp.com/cities'))
 
-# Need To Fix:
 def test_search_incorrectly():
     driver = init()
     search_field = driver.find_element(By.XPATH, SEARCH_FIELD)
@@ -70,8 +65,8 @@ def test_search_incorrectly():
     search_field.send_keys('France')
     search_field.send_keys(Keys.ENTER)
     driver.implicitly_wait(15)
-    error = driver.find_element(By.XPATH, ERROR_MESSAGE).get_attribute('outerHTML')
-    assert error == "<h2 class=\"error-msg\">no city found</h2>"
+    error = driver.find_element(By.XPATH, ERROR_MESSAGE).get_attribute('innerText')
+    assert error == 'No City Found'
 
 
 # --------------------------
@@ -101,14 +96,14 @@ def test_accessibility_with_reset():
     button = driver.find_element(By.CLASS_NAME, ACCESSIBILITY_BUTTON)
     colors = driver.find_elements(By.XPATH, ACCESSIBILITY_SECTION)
     for i in range(len(colors)):
+        driver.implicitly_wait(15)
         button.click()
-        sleep(2)
+        driver.implicitly_wait(15)
         colors[i].click()
-        sleep(3)
         if i == 0:
             continue
         button.click()
-        sleep(3)
+        driver.implicitly_wait(15)
         colors[0].click()
 
 
@@ -116,8 +111,8 @@ def test_accessibility_with_reset():
 TOP_SECTION = 'header'
 CENTER_SECTION = '//section[1]/section[1]'
 BOTTOM_SECTION = '//footer[1]/button[1]'
-WHO_ARE_WE_DETAILS = '//article'
-COPY_RIGHTS_AND_LINKS = '//footer[1]/div[1]'
+WHO_ARE_WE_DETAILS = '//div[1]/footer[1]'
+
 def test_ui():
     driver = init()
     top_section = driver.find_element(By.CSS_SELECTOR, TOP_SECTION).get_attribute('innerText')
@@ -141,19 +136,11 @@ def test_ui():
     bottom_section = driver.find_element(By.XPATH, BOTTOM_SECTION).get_attribute('innerText')
     assert bottom_section == "Who are we?"
 
+    WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, WHO_ARE_WE)))
     who_we_are = driver.find_element(By.XPATH, WHO_ARE_WE)
     who_we_are.click()
-    sleep(5)
 
-    contacts_details = driver.find_elements(By.XPATH, WHO_ARE_WE_DETAILS)
-    details = ["Marcos Bazbih\n24 years old, Ashdod", "Tiva Yosef\n26 years"
-               " old, Natanya", "Avi Amaso\n26 years old, Ashdod"]
-    for i in range(len(contacts_details)):
-        x = contacts_details[i].get_attribute('innerText')
-        if x == details[0] or x == details[1] or x == details[2]:
-            print('\n UI is Passed')
-        else:
-            print('\n UI is Failed')
-
-    copy_rights_and_links = driver.find_element(By.XPATH, COPY_RIGHTS_AND_LINKS).get_attribute('innerText')
-    assert copy_rights_and_links == "TripYoetz\nLearn more\ncopyright © | 2022 TripYoetz | all right reserved."
+    who_we_are_details = driver.find_element(By.XPATH, WHO_ARE_WE_DETAILS).get_attribute('innerText')
+    assert who_we_are_details == "Marcos Bazbih\n24 years old, Ashdod\nTikva Yosef\n26 years old, Natanya\nAvi " \
+                                 "Admaso\n26 years old, Ashdod\nWho are we?\nTripYoetz\nLearn more\ncopyright " \
+                                 "© | 2022 TripYoetz | all right reserved."

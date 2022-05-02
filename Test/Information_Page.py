@@ -3,7 +3,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
-from time import sleep
 
 # Login Objects:
 EMAIL = "email"
@@ -41,7 +40,7 @@ def test_log_out_correctly():
     alert = driver.switch_to.alert
     alert.accept()
     alert.accept()
-    sleep(2)
+    WebDriverWait(driver, 20)
 
 # --------------------------------------------
 
@@ -57,7 +56,7 @@ def test_links():
             top_links[i].click()
             WebDriverWait(driver, 20)
             driver.back()
-            sleep(3)
+            WebDriverWait(driver, 15)
 
 # --------------------------------------------
 # Who Are We Section: Links
@@ -71,17 +70,15 @@ def test_who_are_we():
     who_are_we_button = driver.find_element(By.XPATH, WHO_ARE_WE)
     driver.implicitly_wait(15)
     who_are_we_button.click()
-    sleep(3)
+    WebDriverWait(driver, 20)
     page_links = driver.find_elements(By.XPATH, PAGE_LINKS)
     for i in range(len(page_links)):
         page_links[i].click()
         driver.implicitly_wait(15)
-        sleep(2)
     contact_links = driver.find_elements(By.XPATH, CONTACT_LINKS)
     for i in range(len(contact_links)):
         contact_links[i].click()
         driver.implicitly_wait(15)
-        sleep(2)
 
 # --------------------------------------------
 
@@ -105,30 +102,30 @@ def test_accessibility_with_reset():
     button = driver.find_element(By.CLASS_NAME, ACCESSIBILITY_BUTTON)
     colors = driver.find_elements(By.XPATH, ACCESSIBILITY_SECTION)
     for i in range(len(colors)):
+        WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CLASS_NAME, ACCESSIBILITY_BUTTON)))
         button.click()
-        sleep(2)
+        driver.implicitly_wait(15)
         colors[i].click()
-        sleep(3)
         if i == 0:
             continue
+        WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CLASS_NAME, ACCESSIBILITY_BUTTON)))
         button.click()
-        sleep(3)
+        driver.implicitly_wait(15)
         colors[0].click()
 # --------------------------------------------
-# Search Field Results: Error Message Not Displayed:
+# Search Field :
 
 
 SEARCH_FIELD = '//form[1]/input[1]'
-ERROR_MESSAGE = '//h2'
+ERROR_MESSAGE = "//h2[contains(text(),'no city found')]"
 def test_search_correctly():
     driver = init()
     search_field = driver.find_element(By.XPATH, SEARCH_FIELD)
-    sleep(2)
+    WebDriverWait(driver, 20)
     search_field.send_keys('Paris')
     search_field.send_keys(Keys.ENTER)
     WebDriverWait(driver, 10).until(EC.url_to_be('https://trip-yoetz.herokuapp.com/cities'))
 
-# Need To Fix:
 def test_search_incorrectly():
     driver = init()
     search_field = driver.find_element(By.XPATH, SEARCH_FIELD)
@@ -136,8 +133,8 @@ def test_search_incorrectly():
     search_field.send_keys('France')
     search_field.send_keys(Keys.ENTER)
     driver.implicitly_wait(15)
-    error = driver.find_element(By.XPATH, ERROR_MESSAGE).get_attribute('outerHTML')
-    assert error == "<h2 class=\"error-msg\">no city found</h2>"
+    error = driver.find_element(By.XPATH, ERROR_MESSAGE).get_attribute('innerText')
+    assert error == 'No City Found'
 
 # --------------------------------------------
 # Edit Profile Correctly and Incorrectly :
@@ -163,20 +160,19 @@ def test_edit_profile_correctly():
     for i in range(len(values)):
         update_section[i].clear()
         update_section[i].send_keys(values[i])
-        sleep(3)
+        WebDriverWait(driver, 20)
     update_button.click()
     WebDriverWait(driver, 20).until(EC.alert_is_present())
     alert = driver.switch_to.alert
     alert.accept()
 
     WebDriverWait(driver, 20)
-    sleep(5)
 
     for i in range(len(values)):
         update_section[i].clear()
         if i != 0:
             update_section[i].send_keys(values[i])
-            sleep(3)
+            WebDriverWait(driver, 20)
     update_button.click()
     WebDriverWait(driver, 20).until(EC.alert_is_present())
     alert = driver.switch_to.alert
@@ -186,7 +182,7 @@ def test_edit_profile_correctly():
         update_section[i].clear()
         if i != 1:
             update_section[i].send_keys(values[i])
-            sleep(3)
+            WebDriverWait(driver, 20)
     update_button.click()
     WebDriverWait(driver, 20).until(EC.alert_is_present())
     alert = driver.switch_to.alert
@@ -196,7 +192,7 @@ def test_edit_profile_correctly():
         update_section[i].clear()
         if i != 4:
             update_section[i].send_keys(values[i])
-            sleep(3)
+            WebDriverWait(driver, 20)
     update_button.click()
     WebDriverWait(driver, 20).until(EC.alert_is_present())
     alert = driver.switch_to.alert
@@ -219,7 +215,6 @@ def test_edit_profile_incorrectly():
         update_section[i].clear()
         update_section[i].send_keys(values1[i])
     update_button.click()
-    sleep(3)
 
     WebDriverWait(driver, 20)
 
@@ -229,7 +224,6 @@ def test_edit_profile_incorrectly():
         update_section[i].clear()
         update_section[i].send_keys(values2[i])
     update_button.click()
-    sleep(3)
 
     WebDriverWait(driver, 20)
 
@@ -239,7 +233,8 @@ def test_edit_profile_incorrectly():
         update_section[i].clear()
         update_section[i].send_keys(values3[i])
     update_button.click()
-    sleep(3)
+
+    WebDriverWait(driver, 20)
 # ------------------------------------------
 # UI Test:
 
@@ -247,8 +242,8 @@ def test_edit_profile_incorrectly():
 TOP_SECTION = 'header'
 CENTER_SECTION = '//section[1]/section[1]/section[1]'
 BOTTOM_SECTION = '//footer[1]/button[1]'
-WHO_ARE_WE_DETAILS = '//article'
-COPY_RIGHTS_AND_LINKS = '//footer[1]/div[1]'
+WHO_ARE_WE_DETAILS = '//div[1]/footer[1]'
+
 def test_ui():
     driver = init()
     top_section = driver.find_element(By.CSS_SELECTOR, TOP_SECTION).get_attribute('innerText')
@@ -263,17 +258,10 @@ def test_ui():
 
     who_we_are = driver.find_element(By.XPATH, WHO_ARE_WE)
     who_we_are.click()
-    sleep(5)
+    WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, WHO_ARE_WE_DETAILS)))
 
-    contacts_details = driver.find_elements(By.XPATH, WHO_ARE_WE_DETAILS)
-    details = ["Marcos Bazbih\n24 years old, Ashdod", "Tikva Yosef\n26 years"
-               " old, Natanya", "Avi Admaso\n26 years old, Ashdod"]
-    for i in range(len(contacts_details)):
-        x = contacts_details[i].get_attribute('innerText')
-        if x == details[0] or x == details[1] or x == details[2]:
-            print('\n UI is Passed')
-        else:
-            print('\n UI is Failed')
+    who_are_we_details = driver.find_element(By.XPATH, WHO_ARE_WE_DETAILS).get_attribute('innerText')
+    assert who_are_we_details == "Marcos Bazbih\n24 years old, Ashdod\nTikva Yosef\n26 years old, Natanya\nAvi " \
+                                 "Admaso\n26 years old, Ashdod\nWho are we?\nTripYoetz\nLearn more\ncopyright " \
+                                 "© | 2022 TripYoetz | all right reserved."
 
-    copy_rights_and_links = driver.find_element(By.XPATH, COPY_RIGHTS_AND_LINKS).get_attribute('innerText')
-    assert copy_rights_and_links == "TripYoetz\nLearn more\ncopyright © | 2022 TripYoetz | all right reserved."

@@ -10,7 +10,7 @@ def init():
     driver = webdriver.Chrome(path)
     driver.get('https://trip-yoetz.herokuapp.com/login')
     driver.maximize_window()
-    sleep(3)
+    WebDriverWait(driver, 20)
     return driver
 
 # -------------------------------------------------
@@ -41,7 +41,7 @@ def test_valid_email_valid_password():
     alert.dismiss()
     # Forward The Driver One Page
     driver.forward()
-    sleep(5)
+    WebDriverWait(driver, 20)
 # 2 Tests When Email is Valid:
 def test_email_valid_password_invalid_and_null():
     value_error_message = 'password or email incorrect'
@@ -60,9 +60,9 @@ def test_email_valid_password_invalid_and_null():
         login_button.click()
         # Clear The Fields :
         email.clear(), password.clear()
-        sleep(2)
+        WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, ERROR_MESSAGE)))
         # Print Message:
-        error = driver.find_element(By.XPATH, ERROR_MESSAGE).text
+        error = driver.find_element(By.XPATH, ERROR_MESSAGE).get_attribute('innerText')
         assert error == value_error_message
 # 3 Tests When Email is Invalid:
 def test_invalid_email_password_valid_invalid_null():
@@ -78,7 +78,7 @@ def test_invalid_email_password_valid_invalid_null():
         password.send_keys(passwords[i])
         login_button.click()
         email.clear(), password.clear()
-        sleep(4)
+        WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, ERROR_MESSAGE)))
         error = driver.find_element(By.XPATH, ERROR_MESSAGE).text
         assert error == value_error_message
 # 3 Tests When Email is Null:
@@ -94,8 +94,8 @@ def test_email_null_password_valid_invalid_null():
         email.send_keys(email_value)
         password.send_keys(passwords[i])
         login_button.click()
-        sleep(3)
         email.clear(), password.clear()
+        WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, ERROR_MESSAGE)))
         error = driver.find_element(By.XPATH, ERROR_MESSAGE).text
         assert error == value_error_message
 # Show Password Button:
@@ -122,10 +122,9 @@ def test__top_links():
     for i in range(len(top_links)):
         if i != 0:
             top_links[i].click()
-            sleep(3)
-            WebDriverWait(driver, 20)
+            WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, TOP_LINKS)))
             driver.back()
-            sleep(3)
+            WebDriverWait(driver, 20)
 
 # -------------------------------------------
 # Accessibility In One By One & One And Reset:
@@ -149,22 +148,21 @@ def test_accessibility_with_reset():
     for i in range(len(colors)):
         button.click()
         driver.implicitly_wait(15)
-        sleep(5)
         colors[i].click()
-        sleep(5)
+        driver.implicitly_wait(15)
         if i == 0:
             continue
-        sleep(5)
+        driver.implicitly_wait(15)
         button.click()
-        sleep(5)
+        driver.implicitly_wait(15)
         colors[0].click()
-        sleep(5)
+        driver.implicitly_wait(15)
 # -------------------------------------------
-# Search Incorrectly: Error Message not Displayed Need To Fix:
+# Search Field:
 
 
 SEARCH_FIELD = 'header-search-input'
-ERROR_MESSAGE1 = '//h2[1]'
+ERROR_MESSAGE1 = "//h2[contains(text(),'no city found')]"
 def test_search_correctly():
     driver = init()
     search_field = driver.find_element(By.CLASS_NAME, SEARCH_FIELD)
@@ -180,10 +178,10 @@ def test_search_incorrectly():
     search_field.send_keys('France')
     search_field.send_keys(Keys.ENTER)
     WebDriverWait(driver, 20)
-    sleep(5)
+    WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, ERROR_MESSAGE1)))
 
-    error = driver.find_element(By.XPATH, ERROR_MESSAGE).get_attribute('outerHTML')
-    assert error == "<h2 class=\"error-msg\">no city found</h2>"
+    error = driver.find_element(By.XPATH, ERROR_MESSAGE1).get_attribute('innerText')
+    assert error == 'No City Found'
 
 # ----------------------------------------------
 
@@ -224,8 +222,7 @@ def test_who_are_we():
 TOP_SECTION = "header"
 CENTER_SECTION = '#mainScroll'
 BOTTOM_SECTION = '//footer[1]'
-LINKS_BOTTOM_SECTION = "logo"
-CONTACTS = '//article'
+WHO_ARE_WE_DETAILS = '//div[1]/footer[1]'
 
 def test_ui():
     driver = init()
@@ -241,15 +238,7 @@ def test_ui():
     assert bottom_section == "Who are we?"
     who_are_we_button.click()
 
-    links_bottom = driver.find_element(By.CLASS_NAME, LINKS_BOTTOM_SECTION).get_attribute('innerText')
-    assert links_bottom == "TripYoetz\nLearn more\ncopyright © | 2022 TripYoetz | all right reserved."
-
-    contacts_details = driver.find_elements(By.XPATH, CONTACTS)
-    details = ["Marcos Bazbih\n24 years old, Ashdod", "Tikva Yosef\n26 years"
-               " old, Natanya", "Avi Admaso\n26 years old, Ashdod"]
-    for i in range(len(contacts_details)):
-        x = contacts_details[i].get_attribute('innerText')
-        if x == details[0] or x == details[1] or x == details[2]:
-            print('\n UI is Passed')
-        else:
-            print('\n UI is Failed')
+    who_are_we_details = driver.find_element(By.XPATH, WHO_ARE_WE_DETAILS).get_attribute('innerText')
+    assert who_are_we_details == "Marcos Bazbih\n24 years old, Ashdod\nTikva Yosef\n26 years old, Natanya\nAvi " \
+                                 "Admaso\n26 years old, Ashdod\nWho are we?\nTripYoetz\nLearn more\ncopyright " \
+                                 "© | 2022 TripYoetz | all right reserved."
