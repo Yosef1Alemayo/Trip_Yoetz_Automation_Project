@@ -29,15 +29,18 @@ def test_login():
     sleep(5)
     return driver
 
-
 def test_Paris():
     driver = test_login()
     driver.find_element(By.XPATH,"//header/form[1]/input[1]").send_keys("paris")
     driver.find_element(By.XPATH,"//header/form[1]/*[1]").send_keys(Keys.ENTER)
+
     #Text -UI
-    # article = driver.find_element(By.XPATH, "//body/div[@id='root']/div[1]/section[1]/section[1]").get_attribute("innerText")
-    # assert article =="Discover Paris\nParis\nhotels\nrestaurants\nactivities\nParis, city and capital of France, situated in the north-central part of the country. People were living on the site of the present-day city, located along the Seine River some 233 miles (375 km) upstream from the river’s mouth on the English Channel (La Manche), by about 7600 BCE. The modern city has spread from the island (the Île de la Cité) and far beyond both banks of the Seine.\nEat\nQuintessential Paris restaurants, bars, and beyond.\nview all\nNew Jawad Longchamp\nASPIC\nPur' - Jean-François Rouquette\nBoutary\nOrigines\nBistrot Kinzo\nview all\nStay\nA mix of the charming, iconic, and modern.\nview all\nview all\nDo\nPlaces to see, ways to wander, and signature experiences that define Paris.\nview all\nEiffel dfs\nview all"
-    driver.find_element(By.XPATH, "//a[contains(text(),'hotels')]").click()
+    sleep(5)
+    article = driver.find_element(By.XPATH, "//body/div[@id='root']/div[1]/section[1]/section[1]").get_attribute("innerText")
+    assert article =="Discover Paris\nParis\nhotels\nrestaurants\nactivities\nParis, city and capital of France, situated in the north-central part of the country. People were living on the site of the present-day city, located along the Seine River some 233 miles (375 km) upstream from the river’s mouth on the English Channel (La Manche), by about 7600 BCE. The modern city has spread from the island (the Île de la Cité) and far beyond both banks of the Seine.\nEat\nQuintessential Paris restaurants, bars, and beyond.\nview all\nNew Jawad Longchamp\nASPIC\nPur' - Jean-François Rouquette\nBoutary\nOrigines\nBistrot Kinzo\nview all\nStay\nA mix of the charming, iconic, and modern.\nview all\nview all\nDo\nPlaces to see, ways to wander, and signature experiences that define Paris.\nview all\nEiffel dfs\nview all"
+
+    WebDriverWait(driver,10).until(EC.element_to_be_clickable((By.XPATH,"//a[contains(text(),'hotels')]")))
+    driver.find_element(By.XPATH,"//a[contains(text(),'hotels')]").click()
     driver.find_element(By.XPATH, "//a[contains(text(),'restaurants')]").click()
     driver.find_element(By.XPATH, "//a[contains(text(),'activities')]").click()
     driver.find_element(By.XPATH, "//a[contains(text(),'Paris')]").click()
@@ -57,3 +60,5 @@ def test_Paris():
     alert = driver.switch_to.alert
     alert.accept()
     alert.accept()
+
+

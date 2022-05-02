@@ -33,40 +33,41 @@ date_M = "//body/div[@id='root']/div[1]/footer[1]/article[1]"
 def test_who_we_are():
     driver = int()
     driver.find_element(By.XPATH,"//body/div[@id='root']/div[1]/footer[1]/button[1]").click()
+
     #text - UI
-    # title = driver.find_element(By.XPATH,text_title ).get_attribute("innerText")
-    # assert title == "TripYoetz\nLearn more\ncopyright © | 2022 TripYoetz | all right reserved."
-    # details_avi = driver.find_element(By.XPATH, date_A).get_attribute("innerText")
-    # assert details_avi == "Avi Admaso\n26 years old, Ashdod"
-    # details_tikva = driver.find_element(By.XPATH,date_T ).get_attribute("innerText")
-    # assert details_tikva == "Tikva Yosef\n26 years old, Natanya"
-    # details_marcos = driver.find_element(By.XPATH,date_M ).get_attribute("innerText")
-    # assert details_marcos == "Marcos Bazbih\n24 years old, Ashdod"
-    #Not working
-    # "Trip yoetz" button
-    # driver.find_element(By.XPATH,"//body/div[@id='root']/div[1]/footer[1]/div[1]/a[1]").click()
-    # sleep(2)
-    # "Learn more" button
-    # driver.find_element(By.XPATH,"Learn more").click()
-    # sleep(2)
+    title = driver.find_element(By.XPATH,text_title ).get_attribute("innerText")
+    assert title == "TripYoetz\nLearn more\ncopyright © | 2022 TripYoetz | all right reserved."
+    details_avi = driver.find_element(By.XPATH, date_A).get_attribute("innerText")
+    assert details_avi == "Avi Admaso\n26 years old, Ashdod"
+    details_tikva = driver.find_element(By.XPATH,date_T ).get_attribute("innerText")
+    assert details_tikva == "Tikva Yosef\n26 years old, Natanya"
+    details_marcos = driver.find_element(By.XPATH,date_M ).get_attribute("innerText")
+    assert details_marcos == "Marcos Bazbih\n24 years old, Ashdod"
+
+    #button
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//body/div[@id='root']/div[1]/footer[1]/div[1]/a[1]")))
+    driver.find_element(By.XPATH, "//body/div[@id='root']/div[1]/footer[1]/div[1]/a[1]").click()
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//a[contains(text(),'Learn more')]")))
+    driver.find_element(By.XPATH, "//a[contains(text(),'Learn more')]").click()
+
     # # #avi
-    # WebDriverWait(driver,5).until(EC.element_to_be_clickable((By.XPATH,avi_git)))
-    # driver.find_element(By.XPATH,avi_git).click()
-    # WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH,avi_linkdin)))
-    # driver.find_element(By.XPATH,avi_linkdin).click()
-    # WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH,avi_email)))
-    # driver.find_element(By.XPATH,avi_email).click()
-    # # #tikva
-    # WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH,tikva_git)))
-    # driver.find_element(By.XPATH,tikva_git).click()
-    # WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH,tikva_linkdin)))
-    # driver.find_element(By.XPATH,tikva_linkdin ).click()
-    # WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH,tikva_email)))
-    # driver.find_element(By.XPATH, tikva_email).click()
-    # # #marcos
-    # WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH,marcos_git)))
-    # driver.find_element(By.XPATH,marcos_git).click()
-    # WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH,marcos_linkdin)))
-    # driver.find_element(By.XPATH,marcos_linkdin).click()
-    # WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH,marcos_email)))
-    # driver.find_element(By.XPATH,marcos_email).click()
+    WebDriverWait(driver,5).until(EC.element_to_be_clickable((By.XPATH,avi_git)))
+    driver.find_element(By.XPATH,avi_git).click()
+    WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH,avi_linkdin)))
+    driver.find_element(By.XPATH,avi_linkdin).click()
+    WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH,avi_email)))
+    driver.find_element(By.XPATH,avi_email).click()
+    # #tikva
+    WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH,tikva_git)))
+    driver.find_element(By.XPATH,tikva_git).click()
+    WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH,tikva_linkdin)))
+    driver.find_element(By.XPATH,tikva_linkdin ).click()
+    WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH,tikva_email)))
+    driver.find_element(By.XPATH, tikva_email).click()
+    # #marcos
+    WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH,marcos_git)))
+    driver.find_element(By.XPATH,marcos_git).click()
+    WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH,marcos_linkdin)))
+    driver.find_element(By.XPATH,marcos_linkdin).click()
+    WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH,marcos_email)))
+    driver.find_element(By.XPATH,marcos_email).click()
