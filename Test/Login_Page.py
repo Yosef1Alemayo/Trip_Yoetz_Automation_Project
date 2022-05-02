@@ -6,7 +6,7 @@ from selenium.webdriver.common.keys import Keys
 from time import sleep
 
 def init():
-    path = 'C://Users//yossi//Desktop//pythonProject//Driver//chromedriver.exe'
+    path = 'C://Users//yossi//Desktop//Python-Project//Trip_Yoetz_Automation_Project//Driver//chromedriver.exe'
     driver = webdriver.Chrome(path)
     driver.get('https://trip-yoetz.herokuapp.com/login')
     driver.maximize_window()
