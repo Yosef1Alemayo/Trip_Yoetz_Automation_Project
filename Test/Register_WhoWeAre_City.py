@@ -7,7 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
 
 def int():
-    driver = webdriver.Chrome("")
+    driver = webdriver.Chrome("C://Users//yossi//Desktop//Trip_Yoetz_Automation_Project//Driver//chromedriver.exe")
     driver.get("https://trip-yoetz.herokuapp.com/login")
     driver.maximize_window()
     return driver
