@@ -144,3 +144,6 @@ def test_ui():
     assert who_we_are_details == "Marcos Bazbih\n24 years old, Ashdod\nTikva Yosef\n26 years old, Natanya\nAvi " \
                                  "Admaso\n26 years old, Ashdod\nWho are we?\nTripYoetz\nLearn more\ncopyright " \
                                  "© | 2022 TripYoetz | all right reserved."
+
+
+

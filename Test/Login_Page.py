@@ -3,7 +3,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
-from time import sleep
 
 def init():
     path = 'C://Users//yossi//Desktop//Python-Project//Trip_Yoetz_Automation_Project//Driver//chromedriver.exe'
@@ -137,26 +136,26 @@ def test_accessibility_one_by_one():
     button = driver.find_element(By.CLASS_NAME, ACCESSIBILITY_BUTTON)
     colors = driver.find_elements(By.XPATH, ACCESSIBILITY_SECTION)
     for i in range(len(colors)):
+        WebDriverWait(driver, 30)
         button.click()
         driver.implicitly_wait(15)
         colors[i].click()
 
 def test_accessibility_with_reset():
     driver = init()
+    driver.implicitly_wait(15)
     button = driver.find_element(By.CLASS_NAME, ACCESSIBILITY_BUTTON)
     colors = driver.find_elements(By.XPATH, ACCESSIBILITY_SECTION)
     for i in range(len(colors)):
+        driver.implicitly_wait(15)
         button.click()
         driver.implicitly_wait(15)
         colors[i].click()
-        driver.implicitly_wait(15)
         if i == 0:
             continue
-        driver.implicitly_wait(15)
         button.click()
         driver.implicitly_wait(15)
         colors[0].click()
-        driver.implicitly_wait(15)
 # -------------------------------------------
 # Search Field:
 

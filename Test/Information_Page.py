@@ -92,6 +92,7 @@ def test_accessibility_one_by_one():
     button = driver.find_element(By.CLASS_NAME, ACCESSIBILITY_BUTTON)
     colors = driver.find_elements(By.XPATH, ACCESSIBILITY_SECTION)
     for i in range(len(colors)):
+        driver.implicitly_wait(15)
         WebDriverWait(driver, 20)
         button.click()
         driver.implicitly_wait(15)
@@ -102,13 +103,12 @@ def test_accessibility_with_reset():
     button = driver.find_element(By.CLASS_NAME, ACCESSIBILITY_BUTTON)
     colors = driver.find_elements(By.XPATH, ACCESSIBILITY_SECTION)
     for i in range(len(colors)):
-        WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CLASS_NAME, ACCESSIBILITY_BUTTON)))
+        driver.implicitly_wait(15)
         button.click()
         driver.implicitly_wait(15)
         colors[i].click()
         if i == 0:
             continue
-        WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CLASS_NAME, ACCESSIBILITY_BUTTON)))
         button.click()
         driver.implicitly_wait(15)
         colors[0].click()
@@ -264,4 +264,3 @@ def test_ui():
     assert who_are_we_details == "Marcos Bazbih\n24 years old, Ashdod\nTikva Yosef\n26 years old, Natanya\nAvi " \
                                  "Admaso\n26 years old, Ashdod\nWho are we?\nTripYoetz\nLearn more\ncopyright " \
                                  "© | 2022 TripYoetz | all right reserved."
-
